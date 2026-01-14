@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pez — Estoy vivo</title>
+  <style>
+    :root { --w: 100vw; --h: 100vh; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: #001a33;
+    }
+
+    /* Océano (gradiente + rayos de luz) */
+    .ocean {
+      position: relative;
+      width: var(--w);
+      height: var(--h);
+      background: radial-gradient(1200px 600px at 50% 0%, rgba(120, 200, 255, 0.35), transparent 60%),
+                  linear-gradient(#022a52 0%, #012240 35%, #00162b 100%);
+    }
+    .light {
+      position: absolute;
+      inset: -30% -20% auto -20%;
+      height: 70%;
+      background:
+        repeating-linear-gradient(
+          70deg,
+          rgba(255,255,255,0.10) 0 40px,
+          rgba(255,255,255,0.00) 40px 110px
+        );
+      filter: blur(2px);
+      opacity: .35;
+      transform: rotate(-6deg);
+      pointer-events: none;
+      animation: shimmer 6s ease-in-out infinite;
+    }
+    @keyframes shimmer {
+      0%,100% { transform: translateX(-2%) rotate(-6deg); opacity: .28; }
+      50% { transform: translateX(2%) rotate(-6deg); opacity: .40; }
+    }
+
+    /* Burbujas */
+    .bubble {
+      position: absolute;
+      bottom: -60px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.35);
+      background: rgba(255,255,255,.05);
+      filter: blur(.2px);
+      animation: rise linear infinite;
+      pointer-events: none;
+    }
+    @keyframes rise {
+      from { transform: translateY(0) translateX(0) scale(1); opacity: .0; }
+      10% { opacity: .6; }
+      to { transform: translateY(-120vh) translateX(var(--drift, 0px)) scale(1.6); opacity: 0; }
+    }
+
+    /* Pez (hecho con CSS) */
+    .fish-wrap {
+      position: absolute;
+      top: 45%;
+      left: -220px;
+      width: 260px;
+      height: 140px;
+      transform: translateY(-50%);
+      animation: swim 12s linear infinite;
+    }
+    @keyframes swim {
+      0% { transform: translate(-220px, -50%) scale(1); }
+      50% { transform: translate(calc(100vw - 120px), -58%) scale(1.03); }
+      100% { transform: translate(calc(100vw + 260px), -50%) scale(1); }
+    }
+
+    .fish {
+      position: absolute;
+      left: 60px;
+      top: 34px;
+      width: 120px;
+      height: 70px;
+      border-radius: 60px 55px 55px 60px;
+      background: linear-gradient(135deg, #ffd166 0%, #ff7b54 45%, #ff4d6d 100%);
+      box-shadow: 0 12px 30px rgba(0,0,0,.25);
+      transform-origin: 20px 35px;
+      animation: bob 1.8s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%,100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(6px) rotate(-1.5deg); }
+    }
+
+    .fin {
+      position: absolute;
+      left: 52px;
+      top: 40px;
+      width: 34px;
+      height: 26px;
+      background: rgba(255,255,255,.25);
+      border-radius: 60% 40% 60% 40%;
+      transform: rotate(-22deg);
+      filter: blur(.1px);
+    }
+
+    .eye {
+      position: absolute;
+      left: 92px;
+      top: 22px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: inset -2px -2px 0 rgba(0,0,0,.1);
+    }
+    .eye::after {
+      content: "";
+      position: absolute;
+      left: 5px; top: 5px;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #111;
+    }
+
+    .tail {
+      position: absolute;
+      left: 22px;
+      top: 46px;
+      width: 44px;
+      height: 44px;
+      transform-origin: 44px 22px;
+      animation: wag .35s ease-in-out infinite;
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,.18));
+    }
+    @keyframes wag {
+      0%,100% { transform: rotate(18deg); }
+      50% { transform: rotate(-18deg); }
+    }
+    .tail::before,
+    .tail::after {
+      content: "";
+      position: absolute;
+      width: 38px; height: 26px;
+      background: linear-gradient(135deg, #ff9f1c, #ff4d6d);
+      border-radius: 70% 30% 70% 30%;
+    }
+    .tail::before { left: 0; top: 0; transform: rotate(18deg); }
+    .tail::after  { left: 0; top: 18px; transform: rotate(-18deg); }
+
+    /* Cartel "estoy vivo" */
+    .sign {
+      position: absolute;
+      left: 170px;
+      top: 8px;
+      width: 150px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.92);
+      border-radius: 14px;
+      color: #0b1b2b;
+      font-weight: 800;
+      text-transform: lowercase;
+      letter-spacing: .3px;
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
+      border: 2px solid rgba(0,0,0,.06);
+      animation: floaty 2.2s ease-in-out infinite;
+    }
+    .sign::after {
+      content: "";
+      position: absolute;
+      left: 26px;
+      bottom: -10px;
+      width: 18px;
+      height: 18px;
+      background: rgba(255,255,255,.92);
+      transform: rotate(45deg);
+      border-right: 2px solid rgba(0,0,0,.06);
+      border-bottom: 2px solid rgba(0,0,0,.06);
+    }
+    @keyframes floaty {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(5px); }
+    }
+
+    /* Suelo del océano */
+    .seafloor {
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 18vh;
+      background: linear-gradient(to top, rgba(0,0,0,.35), rgba(0,0,0,0));
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="ocean" id="ocean">
+    <div class="light"></div>
+
+    <div class="fish-wrap" aria-label="Pez nadando">
+      <div class="tail"></div>
+      <div class="fish">
+        <div class="fin"></div>
+        <div class="eye"></div>
+      </div>
+      <div class="sign">estoy vivo</div>
+    </div>
+
+    <div class="seafloor"></div>
+  </div>
+
+  <script>
+    // Genera burbujas aleatorias
+    const ocean = document.getElementById("ocean");
+    const makeBubble = () => {
+      const b = document.createElement("div");
+      b.className = "bubble";
+      const size = 6 + Math.random() * 16;
+      b.style.width = size + "px";
+      b.style.height = size + "px";
+      b.style.left = (Math.random() * 100) + "vw";
+      b.style.animationDuration = (5 + Math.random() * 7) + "s";
+      b.style.setProperty("--drift", ((Math.random() * 160) - 80) + "px");
+      ocean.appendChild(b);
+      setTimeout(() => b.remove(), 13000);
+    };
+
+    // ritmo de burbujas
+    setInterval(makeBubble, 250);
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+Ch
